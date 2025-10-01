@@ -1,40 +1,33 @@
 import compression from "compression";
 import cors from "cors";
-import express from "express";
-import { userRouter } from "./modules/user/user.routes";
-import { postRouter } from "./modules/post/post.router";
-import { authRouter } from "./modules/auth/auth.routes";
+import express, { Request, Response } from "express";
+import { envVars } from "./config/env";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import notFound from "./middlewares/notFound";
+import { router } from "./routes";
 
-const app = express();
+export const app = express();
 
 // Middleware
 app.use(cors()); // Enables Cross-Origin Resource Sharing
 app.use(compression()); // Compresses response bodies for faster delivery
-app.use(express.json()); // Parse incoming JSON requests
+app.set("trust proxy", 1);
+app.use(express.json()) // Parses incoming requests with JSON payloads
+app.use(express.urlencoded({ extended: true }))
+app.use(cors({
+    origin: envVars.FRONTEND_URL,
+    credentials: true
+}))
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use("/api/v1", router)
 
-app.use("/api/v1/user", userRouter);
-app.use("/api/v1/post", postRouter);
-app.use("/api/v1/auth", authRouter);
-
-// Default route for testing
-app.get("/", (_req, res) => {
-  res.send("API is running");
-});
+app.get("/", (req: Request, res: Response) => {
+    res.status(200).json({
+        message: "Welcome to Parcel Management System Backend"
+    })
+})
 
 
-// 404 Handler
-app.use((req, res, next) => {
-  res.status(404).json({
-    success: false,
-    message: "Route Not Found",
-  });
-});
+app.use(globalErrorHandler)
 
-export default app;
+app.use(notFound)

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Post, Prisma } from "@prisma/client";
 import { prisma } from "../../config/db";
+import AppError from "../../errorHelpers/AppError";
 
 const createPost = async (payload: Prisma.PostCreateInput): Promise<Post> => {
     const result = await prisma.post.create({
@@ -52,7 +54,14 @@ const getAllPosts = async ({
         take: limit,
         where,
         include: {
-            author: true
+            author: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    picture: true
+                }
+            }
         },
         orderBy: {
             createdAt: "desc"
@@ -72,29 +81,49 @@ const getAllPosts = async ({
     };
 };
 
-const getPostById = async (id: number) => {
+// const getPostById = async (id: string) => {
+//     return await prisma.$transaction(async (tx) => {
+//         await tx.post.update({
+//             where: { id },
+//             data: {
+//                 views: {
+//                     increment: 1
+//                 }
+//             }
+//         });
+
+//         return await tx.post.findUnique({
+//             where: { id },
+//             include: { author: true },
+//         });
+//     })
+// };
+const getPostBySlug = async (slug: string) => {
     return await prisma.$transaction(async (tx) => {
         await tx.post.update({
-            where: { id },
+            where: { slug },
             data: {
                 views: {
                     increment: 1
                 }
             }
         });
-
         return await tx.post.findUnique({
-            where: { id },
+            where: { slug },
             include: { author: true },
         });
     })
 };
 
-const updatePost = async (id: number, data: Partial<any>) => {
+
+const updatePost = async (id: string, data: Partial<any>) => {
     return prisma.post.update({ where: { id }, data });
 };
 
-const deletePost = async (id: number) => {
+const deletePost = async (id: string) => {
+    if (!id) {
+        throw new AppError(404, "Post ID is required");
+    }
     return prisma.post.delete({ where: { id } });
 };
 
@@ -108,15 +137,7 @@ const getBlogStat = async () => {
             _max: { views: true },
             _min: { views: true },
         })
-
-        const featuredCount = await tx.post.count({
-            where: {
-                isFeatured: true
-            }
-        });
-
         const topFeatured = await tx.post.findFirst({
-            where: { isFeatured: true },
             orderBy: { views: "desc" }
         })
 
@@ -140,7 +161,6 @@ const getBlogStat = async () => {
                 maxViews: aggregates._max.views ?? 0
             },
             featured: {
-                count: featuredCount,
                 topPost: topFeatured,
             },
             lastWeekPostCount
@@ -151,8 +171,9 @@ const getBlogStat = async () => {
 export const PostService = {
     createPost,
     getAllPosts,
-    getPostById,
+    // getPostById,
     updatePost,
     deletePost,
-    getBlogStat
+    getBlogStat,
+    getPostBySlug
 }

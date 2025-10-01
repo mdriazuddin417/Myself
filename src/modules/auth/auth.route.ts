@@ -8,9 +8,10 @@ router.post(
     AuthController.loginWithEmailAndPassword
 )
 router.post(
-    "/google",
-    AuthController.authWithGoogle
+    "/register",
+    AuthController.registerUser
 )
 
 
-export const authRouter = router;
+
+export const AuthRouter = router;

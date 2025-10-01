@@ -9,10 +9,9 @@ const loginWithEmailAndPassword = async (req: Request, res: Response) => {
         res.status(500).send(error)
     }
 }
-
-const authWithGoogle = async (req: Request, res: Response) => {
+const registerUser = async (req: Request, res: Response) => {
     try {
-        const result = await AuthService.authWithGoogle(req.body)
+        const result = await AuthService.registerUser(req.body)
         res.status(200).json(result);
     } catch (error) {
         res.status(500).send(error)
@@ -21,5 +20,5 @@ const authWithGoogle = async (req: Request, res: Response) => {
 
 export const AuthController = {
     loginWithEmailAndPassword,
-    authWithGoogle
+    registerUser
 }

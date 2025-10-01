@@ -13,10 +13,7 @@ router.get(
     UserController.getUserById
 )
 
-router.post(
-    "/",
-    UserController.createUser
-)
+router.post("/", UserController.createUser)
 
 router.patch(
     "/:id",
@@ -28,4 +25,4 @@ router.delete(
     UserController.deleteUser
 )
 
-export const userRouter = router;
+export const UserRouter = router;

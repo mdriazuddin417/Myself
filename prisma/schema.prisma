@@ -13,10 +13,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model User {
-  id         Int        @id @default(autoincrement())
+  id         String     @id @default(cuid())
   name       String
   email      String     @unique
   password   String?
@@ -28,20 +26,7 @@ model User {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   posts      Post[]
-}
-
-model Post {
-  id         Int      @id @default(autoincrement())
-  title      String
-  content    String
-  thumbnail  String?
-  isFeatured Boolean  @default(false)
-  tags       String[]
-  views      Int      @default(0)
-  authorId   Int
-  author     User     @relation(fields: [authorId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  projects   Project[]
 }
 
 enum Role {
@@ -54,4 +39,48 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   BLOCK
+}
+
+model Post {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  content       String
+  excerpt       String
+  featuredImage String?
+  published     Boolean   @default(false)
+  publishedAt   DateTime?
+  readTime      Int
+  views         Int       @default(0)
+  tags          String[]
+  authorId      String
+  author        User      @relation(fields: [authorId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Project {
+  id              String        @id @default(cuid())
+  title           String
+  description     String
+  longDescription String
+  slug            String        @unique
+  technologies    String[]
+  githubUrl       String?
+  liveUrl         String?
+  images          String[]
+  featured        Boolean       @default(false)
+  status          ProjectStatus @default(PLANNED)
+  startDate       DateTime
+  endDate         DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+}
+
+enum ProjectStatus {
+  COMPLETED
+  IN_PROGRESS
+  PLANNED
 }

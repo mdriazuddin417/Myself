@@ -1,14 +1,18 @@
 import { Request, Response } from "express";
+import httpStatus from "http-status-codes";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
 import { UserService } from "./user.service";
 
-const createUser = async (req: Request, res: Response) => {
-    try {
-        const result = await UserService.createUser(req.body)
-        res.status(201).json(result);
-    } catch (error) {
-        res.status(500).send(error)
-    }
-}
+const createUser = catchAsync(async (req: Request, res: Response,) => {
+    const result = await UserService.createUser(req.body)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Updated Successfully",
+        data: result,
+    })
+})
 
 const getAllFromDB = async (req: Request, res: Response) => {
     try {
@@ -28,14 +32,15 @@ const getUserById = async (req: Request, res: Response) => {
     }
 }
 
-const updateUser = async (req: Request, res: Response) => {
-    try {
-        const result = await UserService.updateUser(Number(req.params.id), req.body)
-        res.status(201).json(result);
-    } catch (error) {
-        res.status(500).send(error)
-    }
-}
+const updateUser = catchAsync(async (req: Request, res: Response) => {
+    const result = await UserService.updateUser(Number(req.params.id), req.body)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.CREATED,
+        message: "User Updated Successfully",
+        data: result,
+    })
+})
 
 const deleteUser = async (req: Request, res: Response) => {
     try {

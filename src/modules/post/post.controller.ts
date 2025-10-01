@@ -25,19 +25,15 @@ const getAllPosts = async (req: Request, res: Response) => {
     }
 };
 
-const getPostById = async (req: Request, res: Response) => {
-    const post = await PostService.getPostById(Number(req.params.id));
-    if (!post) return res.status(404).json({ error: "Post not found" });
-    res.json(post);
-};
+
 
 const updatePost = async (req: Request, res: Response) => {
-    const post = await PostService.updatePost(Number(req.params.id), req.body);
+    const post = await PostService.updatePost(String(req.params.id), req.body);
     res.json(post);
 };
 
 const deletePost = async (req: Request, res: Response) => {
-    await PostService.deletePost(Number(req.params.id));
+    await PostService.deletePost(String(req.params.id));
     res.json({ message: "Post deleted" });
 };
 
@@ -51,11 +47,25 @@ const getBlogStat = async (req: Request, res: Response) => {
     }
 };
 
+// const getPostById = async (req: Request, res: Response) => {
+//     const post = await PostService.getPostById(String(req.params.id));
+//     if (!post) return res.status(404).json({ error: "Post not found" });
+//     res.json(post);
+// };
+const getPostBySlug = async (req: Request, res: Response) => {
+    const { slug } = req.params;
+    console.log({ slug });
+    const post = await PostService.getPostBySlug(slug);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+    res.json(post);
+};
+
 export const PostController = {
     createPost,
     getAllPosts,
-    getPostById,
+    // getPostById,
     updatePost,
     deletePost,
+    getPostBySlug,
     getBlogStat
 }
