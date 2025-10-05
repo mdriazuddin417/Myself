@@ -15,7 +15,6 @@ export const projectSchema = z.object({
     repoUrl: z.string().url().optional(),
     slug: z.string().optional(),
     startDate: z.string().optional(),
-    userId: z.string(),
     images: z.array(z.string().url()),
     technologies: z.array(z.string()),
     githubUrl: z.string().url().optional(),
@@ -32,7 +31,7 @@ function generateSlug(title: string): string {
 
 export async function createProject(req: Request, res: Response) {
     const parsed = projectSchema.safeParse(req.body)
-    console.log({ parsed });
+    console.log({ parsed, body: req.body });
     if (!parsed.success) {
         return res.status(400).json({
             error: "Invalid input",

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { PostService } from "./post.service";
+import { uploadBufferToCloudinary } from "../../config/cloudinary.config";
+import { Post } from "@prisma/client";
 
 const createPost = async (req: Request, res: Response) => {
     try {
@@ -28,8 +30,22 @@ const getAllPosts = async (req: Request, res: Response) => {
 
 
 const updatePost = async (req: Request, res: Response) => {
+    // const { id } = req.params;
+
+    // const data: Post = { ...req.body };
+
+    // if (req.file) {
+    //     const uploadRes = await uploadBufferToCloudinary(
+    //         req.file.buffer,
+    //         req.file.originalname
+    //     );
+    //     data.featuredImage = uploadRes?.secure_url ?? null;
+    // }
+
+    console.log({ data: req.body });
+
     const post = await PostService.updatePost(String(req.params.id), req.body);
-    res.json(post);
+    res.json({ message: "Post updated", });
 };
 
 const deletePost = async (req: Request, res: Response) => {
