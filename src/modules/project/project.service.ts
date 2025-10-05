@@ -21,7 +21,7 @@ export const projectSchema = z.object({
     userId: z.string().optional(),
 })
 
-function generateSlug(title: string): string {
+export function generateSlug(title: string): string {
     return title
         .toLowerCase()
         .trim()

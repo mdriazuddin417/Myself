@@ -2,10 +2,12 @@
 import { Post, Prisma } from "@prisma/client";
 import { prisma } from "../../config/db";
 import AppError from "../../errorHelpers/AppError";
+import { generateSlug } from "../project/project.service";
 
 const createPost = async (payload: Prisma.PostCreateInput): Promise<Post> => {
+    const slug: string = generateSlug(payload.title)
     const result = await prisma.post.create({
-        data: payload,
+        data: { ...payload, slug },
         include: {
             author: {
                 select: {

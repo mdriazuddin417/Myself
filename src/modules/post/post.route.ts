@@ -1,10 +1,10 @@
 import express from 'express';
 import { PostController } from './post.controller';
-import multer from "multer";
+// import multer from "multer";
 
 const router = express.Router();
 
-const upload = multer();
+// const upload = multer();
 
 router.get("/stats", PostController.getBlogStat)
 

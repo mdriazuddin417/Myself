@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { PostService } from "./post.service";
-import { uploadBufferToCloudinary } from "../../config/cloudinary.config";
-import { Post } from "@prisma/client";
 
 const createPost = async (req: Request, res: Response) => {
     try {
@@ -42,9 +40,9 @@ const updatePost = async (req: Request, res: Response) => {
     //     data.featuredImage = uploadRes?.secure_url ?? null;
     // }
 
-    console.log({ data: req.body });
 
-    const post = await PostService.updatePost(String(req.params.id), req.body);
+
+    await PostService.updatePost(String(req.params.id), req.body);
     res.json({ message: "Post updated", });
 };
 

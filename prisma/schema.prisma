@@ -53,8 +53,8 @@ model Post {
   readTime      Int
   views         Int       @default(0)
   tags          String[]
-  authorId      String
-  author        User      @relation(fields: [authorId], references: [id])
+  authorId      String? // optional FK
+  author        User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
