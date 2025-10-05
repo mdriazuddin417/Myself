@@ -9,7 +9,7 @@ import { envVars } from "./env";
 
 // Amader folder -> image -> form data -> File -> Multer -> Amader project / pc te Nijer ekta folder(temporary) -> Req.file
 
-//req.file -> cloudinary(req.file) -> url -> mongoose -> mongodb
+
 
 
 cloudinary.config({
@@ -78,6 +78,3 @@ export const cloudinaryUpload = cloudinary
 // const uploadToCloudinary = cloudinary.uploader.upload()
 
 //
-
-//Multer storage cloudinary
-//Amader folder -> image -> form data -> File -> Multer -> storage in cloudinary -> url ->  req.file  -> url  -> mongoose -> mongodb

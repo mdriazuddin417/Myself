@@ -25,7 +25,7 @@ const getAllFromDB = async (req: Request, res: Response) => {
 
 const getUserById = async (req: Request, res: Response) => {
     try {
-        const result = await UserService.getUserById(Number(req.params.id))
+        const result = await UserService.getUserById(String(req.params.id))
         res.status(201).json(result);
     } catch (error) {
         res.status(500).send(error)
@@ -33,7 +33,7 @@ const getUserById = async (req: Request, res: Response) => {
 }
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
-    const result = await UserService.updateUser(Number(req.params.id), req.body)
+    const result = await UserService.updateUser(String(req.params.id), req.body)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.CREATED,
@@ -44,7 +44,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
     try {
-        const result = await UserService.deleteUser(Number(req.params.id))
+        const result = await UserService.deleteUser(String(req.params.id))
         res.status(201).json(result);
     } catch (error) {
         res.status(500).send(error)

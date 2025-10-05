@@ -18,6 +18,7 @@ export const projectSchema = z.object({
     images: z.array(z.string().url()),
     technologies: z.array(z.string()),
     githubUrl: z.string().url().optional(),
+    userId: z.string().optional(),
 })
 
 function generateSlug(title: string): string {
